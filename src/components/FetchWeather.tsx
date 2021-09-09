@@ -94,9 +94,8 @@ class FetchWeather extends React.Component<WeatherFetchProps, WeatherFetchState>
                     &nbsp;longitude
                 </p>
                 
-                <h1>
-                Local Weather
-                </h1>
+                <DisplayWeather />
+             
                 <p>
                 <br></br>
                Temperature:  {this.state.temperature} Kelvins
