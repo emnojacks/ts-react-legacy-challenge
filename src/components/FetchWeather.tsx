@@ -8,11 +8,14 @@ type WeatherFetchProps = {
 }
  
 type WeatherFetchState = {
-    loaded: boolean;
-    weather: object;
-    position: object;
-    lat: number;
+    loaded: boolean,
+    weather: object,
+    position: object,
+    lat: number,
     lon: number
+    temperature: number
+    humidity: number 
+    description: string
 }
  
 class FetchWeather extends React.Component<WeatherFetchProps, WeatherFetchState> {
@@ -20,10 +23,13 @@ class FetchWeather extends React.Component<WeatherFetchProps, WeatherFetchState>
         super(props)
         this.state = {
             loaded: false,
-            weather: {},
+            weather: [],
             position: {},
             lat: 0,
-            lon: 0
+            lon: 0,
+            temperature: 0,
+            humidity: 0,
+            description: " " 
         }
     }
     
@@ -52,23 +58,27 @@ class FetchWeather extends React.Component<WeatherFetchProps, WeatherFetchState>
     async fetchWeatherData(position: object) {
         console.log('the component did update');
         try {
-        let URL = `api.openweathermap.org/data/2.5/weather?lat=${this.state.lat}&lon=${this.state.lon}&appid=${APIKey}`
-        console.log(URL);
-            const weatherresponse = fetch(URL);
+            let URL = `http://api.openweathermap.org/data/2.5/weather?lat=${this.state.lat}&lon=${this.state.lon}&appid=${APIKey}`;
+            console.log(URL);
+            const weatherresponse = await fetch(URL);
             console.log(weatherresponse);
-            const weatherjson = await weatherresponse;
-            console.log(weatherjson);
-       this.setState({
-           loaded: true,
-           weather: weatherjson
-       })
-            console.log(`The Weather Data is: ${this.state.weather}`);
+            const weatherjson = await weatherresponse.json();
+            console.log(weatherjson)
+            this.setState({
+                loaded: true,
+                weather: weatherjson,
+                temperature: weatherjson.main.temp,
+                humidity: weatherjson.main.humidity,
+                description: weatherjson.weather[0].description
+            })
+            console.log(this.state.weather)
         } catch (error) {
             console.log(error);
         };
     };
     
-    render() { 
+    render() {
+        
         return (  
         <div>
                 <h1>
@@ -83,9 +93,19 @@ class FetchWeather extends React.Component<WeatherFetchProps, WeatherFetchState>
                     {this.state.lon}
                     &nbsp;longitude
                 </p>
-                <DisplayWeather />
+                
+                <h1>
+                Local Weather
+                </h1>
+                <p>
+                <br></br>
+               Temperature:  {this.state.temperature} Kelvins
+                <br></br>
+                Humidity:  {this.state.humidity} %
+                <br></br>
+                Description: {this.state.description}
+                </p>
             </div>
-
 );
     }
 }
