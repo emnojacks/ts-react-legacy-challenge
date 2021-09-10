@@ -94,16 +94,12 @@ class FetchWeather extends React.Component<WeatherFetchProps, WeatherFetchState>
                     &nbsp;longitude
                 </p>
                 
-                <DisplayWeather />
+                <DisplayWeather
+                    description={this.state.description}
+                    humidity={this.state.humidity}
+                    temperature={this.state.temperature}
+                />
              
-                <p>
-                <br></br>
-               Temperature:  {this.state.temperature} Kelvins
-                <br></br>
-                Humidity:  {this.state.humidity} %
-                <br></br>
-                Description: {this.state.description}
-                </p>
             </div>
 );
     }
